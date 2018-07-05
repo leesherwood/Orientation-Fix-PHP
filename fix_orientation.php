@@ -14,7 +14,7 @@
  *
  * If you use this, then let me know at: i-played-with-your-git@secure4sure.org
  */
-
+//By @kormanowsky: I have made some changes to make this script work on PHP 7.
 /**
  * The main function that does the actual job
  * 
@@ -194,16 +194,15 @@ if(!function_exists('imageflip')) {
   
   /**
    * Simple function that takes a gd image resource and the flip mode, and uses rotate 180 instead to do the same thing... Simples!
-   */     
-  function imageflip($resource, $mode) {
+   */
+  //By @kormanowsky: used & to make this function do the same that original PHP function does.
+  function imageflip(&$resource, $mode) {
       
       if($mode == IMG_FLIP_VERTICAL || $mode == IMG_FLIP_BOTH)
         $resource = imagerotate($resource, 180, 0);
       
       if($mode == IMG_FLIP_HORIZONTAL || $mode == IMG_FLIP_BOTH)
         $resource = imagerotate($resource, 90, 0);
-         
-      return $resource;
       
   }
   
