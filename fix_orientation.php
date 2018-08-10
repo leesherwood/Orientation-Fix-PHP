@@ -14,7 +14,7 @@
  *
  * If you use this, then let me know at: i-played-with-your-git@secure4sure.org
  */
-
+//By @kormanowsky: I have made some changes to make this script work on PHP 7.
 /**
  * The main function that does the actual job
  * 
@@ -34,7 +34,8 @@ function fix_orientation($fileandpath) {
     return false;
   
   // Get all the exif data from the file
-  $exif = read_exif_data($fileandpath, 'IFD0');
+  // By @kormanowsky: I used '@' to prevent annoying warnings
+  $exif = @read_exif_data($fileandpath, 'IFD0');
    
   // If we dont get any exif data at all, then we may as well stop now
   if(!$exif || !is_array($exif))
@@ -65,46 +66,43 @@ function fix_orientation($fileandpath) {
     
     // Correct orientation, but flipped on the horizontal axis (might do it at some point in the future)
     case 2: 
-      $final_img = imageflip($img_res, IMG_FLIP_HORIZONTAL);
+      //By @kormanowsky: imageflip() returns TRUE or FALSE so it's wrong to assign its return value to $final_img
+      imageflip($img_res, IMG_FLIP_HORIZONTAL);
     break;
     
     // Upside-Down
     case 3: 
-      $final_img = imageflip($img_res, IMG_FLIP_VERTICAL);
+      imageflip($img_res, IMG_FLIP_VERTICAL);
     break;
     
     // Upside-Down & Flipped along horizontal axis
     case 4:  
-      $final_img = imageflip($img_res, IMG_FLIP_BOTH);
+      imageflip($img_res, IMG_FLIP_BOTH);
     break;
     
     // Turned 90 deg to the left and flipped
     case 5:  
-      $final_img = imagerotate($img_res, -90, 0);
-      $final_img = imageflip($img_res, IMG_FLIP_HORIZONTAL);
+      $img_res = imagerotate($img_res, -90, 0);
+      imageflip($img_res, IMG_FLIP_HORIZONTAL);
     break;
     
     // Turned 90 deg to the left
     case 6: 
-      $final_img = imagerotate($img_res, -90, 0);
+      $img_res = imagerotate($img_res, -90, 0);
     break;
     
     // Turned 90 deg to the right and flipped
     case 7: 
-      $final_img = imagerotate($img_res, 90, 0);
-      $final_img = imageflip($img_res,IMG_FLIP_HORIZONTAL);
+      $img_res = imagerotate($img_res, 90, 0);
+      imageflip($img_res,IMG_FLIP_HORIZONTAL);
     break;
     
     // Turned 90 deg to the right
     case 8: 
-      $final_img = imagerotate($img_res, 90, 0); 
+      $img_res = imagerotate($img_res, 90, 0); 
     break;
     
   }
-  
-  // If theres no final image resource to output for whatever reason, give up
-  if(!isset($final_img))
-    return false;
   
   //-- rename original (very ugly, could probably be rewritten, but i can't be arsed at this stage)
   $parts = explode("/", $fileandpath);
@@ -117,7 +115,7 @@ function fix_orientation($fileandpath) {
   rename($fileandpath, $path.'/'.$newname);
   
   // Save it and the return the result (true or false)
-  $done = save_image_resource($final_img,$fileandpath);
+  $done = save_image_resource($img_res,$fileandpath);
   
   return $done;
 
@@ -196,16 +194,15 @@ if(!function_exists('imageflip')) {
   
   /**
    * Simple function that takes a gd image resource and the flip mode, and uses rotate 180 instead to do the same thing... Simples!
-   */     
-  function imageflip($resource, $mode) {
+   */
+  //By @kormanowsky: used & to make this function do the same that original PHP function does.
+  function imageflip(&$resource, $mode) {
       
       if($mode == IMG_FLIP_VERTICAL || $mode == IMG_FLIP_BOTH)
         $resource = imagerotate($resource, 180, 0);
       
       if($mode == IMG_FLIP_HORIZONTAL || $mode == IMG_FLIP_BOTH)
         $resource = imagerotate($resource, 90, 0);
-         
-      return $resource;
       
   }
   
