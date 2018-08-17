@@ -62,43 +62,38 @@ function fix_orientation($fileandpath) {
   switch($exif['orientation']) {
     
     // Standard/Normal Orientation (no need to do anything, we'll return true as in theory, it was successful)
-    case 1: return true; break;
+    case 1:
+    return true;
     
-    // Correct orientation, but flipped on the horizontal axis (might do it at some point in the future)
-    case 2: 
+    // Flipped on the horizontal axis (might do it at some point in the future)
+    case 2:
       //By @kormanowsky: imageflip() returns TRUE or FALSE so it's wrong to assign its return value to $final_img
       imageflip($img_res, IMG_FLIP_HORIZONTAL);
     break;
     
-    // Upside-Down
-    case 3: 
-      imageflip($img_res, IMG_FLIP_VERTICAL);
-    break;
-    
-    // Upside-Down & Flipped along horizontal axis
-    case 4:  
+    // Turned 180 deg
+    case 3:
       imageflip($img_res, IMG_FLIP_BOTH);
     break;
     
-    // Turned 90 deg to the left and flipped
-    case 5:  
-      $img_res = imagerotate($img_res, -90, 0);
-      imageflip($img_res, IMG_FLIP_HORIZONTAL);
+    // Upside-Down
+    case 4:
+      imageflip($img_res, IMG_FLIP_VERTICAL);
     break;
     
+    // Turned 90 deg to the left and flipped
+    case 5:
+      imageflip($img_res, IMG_FLIP_VERTICAL);
     // Turned 90 deg to the left
-    case 6: 
+    case 6:
       $img_res = imagerotate($img_res, -90, 0);
     break;
     
     // Turned 90 deg to the right and flipped
-    case 7: 
-      $img_res = imagerotate($img_res, 90, 0);
-      imageflip($img_res,IMG_FLIP_HORIZONTAL);
-    break;
-    
+    case 7:
+      imageflip($img_res, IMG_FLIP_VERTICAL);
     // Turned 90 deg to the right
-    case 8: 
+    case 8:
       $img_res = imagerotate($img_res, 90, 0); 
     break;
     
@@ -207,6 +202,3 @@ if(!function_exists('imageflip')) {
   }
   
 }
-
-
-?>
